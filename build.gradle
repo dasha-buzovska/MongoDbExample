@@ -1,0 +1,36 @@
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+group 'com.mongo.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.1'
+    compile group: 'org.mongodb', name: 'bson', version: '3.8.1'
+    compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.0.4.RELEASE', ext: 'pom'
+    compile('org.springframework.boot:spring-boot-starter-web',
+            'org.apache.tomcat.embed:tomcat-embed-jasper',
+            'javax.servlet:jstl')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
