@@ -24,27 +24,17 @@ public class BookConverter {
     public static Book convertBsonDocumentToBook(BsonDocument bsonBook) {
         Book book = new Book(bsonBook.getString("name").getValue());
         BsonObjectId bson = bsonBook.getObjectId("_id");
+
         book.id(bson.getValue().toHexString());
-        try {
-            book.authors(
-                    bsonBook.getArray("authors")
-                            .stream()
-                            .map(author -> author.asString().getValue())
-                            .collect(Collectors.toList())
-            );
-        } catch (BsonInvalidOperationException e) {}
-
-        try {
-            book.year(bsonBook.getInt32("year").getValue());
-        } catch (BsonInvalidOperationException e) {}
-
-        try {
-            book.link(bsonBook.getString("link").getValue());
-        } catch (BsonInvalidOperationException e) {}
-
-        try {
-            book.ISBN(bsonBook.getString("ISBN").getValue());
-        } catch (BsonInvalidOperationException e) {}
+        book.authors(
+                bsonBook.getArray("authors", null)
+                        .stream()
+                        .map(author -> author.asString().getValue())
+                        .collect(Collectors.toList())
+        );
+        book.year(bsonBook.getInt32("year", new BsonInt32(0)).getValue());
+        book.link(bsonBook.getString("link", null).getValue());
+        book.ISBN(bsonBook.getString("ISBN").getValue());
 
         return book;
     }
@@ -72,11 +62,6 @@ public class BookConverter {
 
         if (book.getISBN() != null) {
             document.append("ISBN", new BsonString(book.getISBN()));
-        }
-
-
-        if (book.getId() != null) {
-            document.append("_id", new BsonString(book.getId()));
         }
 
         return document;
